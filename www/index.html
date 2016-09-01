@@ -4,149 +4,1147 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description"
+	content="The HMS ExAC API adds REST API functionality to the ExAC Web Browser">
 <meta name="author" content="Jeremy R. Easton-Marks">
-<link rel="icon" href="../../favicon.ico">
 
-<title>ExAC HMS</title>
-
-<!-- Bootstrap core CSS -->
-<link href="./lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<title>ExAC Browser - Harvard Medical School</title>
 
 <!-- Roboto Font -->
-<link href='https://fonts.googleapis.com/css?family=Roboto'
-	rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
 
-<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+<!-- Bootstrap -->
+<link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css" type='text/css'>
+<link rel="stylesheet" href="./css/main.css" type='text/css'>
 
-<!-- Custom styles for this template -->
-<link href="./css/carousel.css" rel="stylesheet">
+<!-- JSON Viewer -->
+<link rel="stylesheet" href="./lib/json-viewer/jquery.json-viewer.css" type='text/css'>
 </head>
-<!-- NAVBAR -->
 <body>
-	<nav class="navbar navbar-irct navbar-fixed-top">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed"
-					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-					aria-controls="navbar">
-				</button>
-				<a class="navbar-brand" href="./">ExAC HMS</a>
-			</div>
-		</div>
-	</nav>
-	<!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h2>ExAC HMS</h2>
-        <p>Building on the existing ExAC application we opened up direct data access through straight forward web services. These services enable a user to integrate ExAC services into their own tools, querying the variant information and returning the data in an easy to programmatically use JSON format.</p>
-        <p><a class="btn btn-primary btn-lg" href="https://github.com/hms-dbmi/exac_browser" role="button">View in GitHub&raquo;</a></p>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="row">
-      	<div class="col-lg-12">
-      	<h2>Example</h2>
-        <p>Below is an example query for returning all variants in the CHD8 gene</p>
-        <a href="/rest/awesome?query=CHD8&service=variants_in_gene">/rest/awesome?query=CHD8&service=variants_in_gene</a>
+	<nav class="navbar navbar-exac navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <span class="navbar-brand">ExAC Browser - Harvard Medical School</span>
         </div>
       </div>
+    </nav>
+
+    <div class="container-fluid">
       <div class="row">
-      	<div class="col-lg-12">
-      	<h2>REST API</h2>
-<h3>Search</h3>
-<code>
-/rest/awesome?query=&lt;query_str>&service=&lt;optional_service>
-</code>
-
-<h3>Variant</h3>
-
-<code>
-/rest/variant/&lt;variant_str><br/>
-/rest/variant/variant/&lt;variant_str><br/>
-/rest/variant/base_coverage/&lt;variant_str><br/>
-/rest/variant/consequences/&lt;variant_str><br/>
-/rest/variant/any_covered/&lt;variant_str><br/>
-/rest/variant/ordered_csqs/&lt;variant_str><br/>
-/rest/variant/metrics/&lt;variant_str><br/>
-/rest/bulk/variant <i>Takes a JSON Array of variant_str</i><br/>
-/rest/bulk/variant/variant <i>Takes a JSON Array of variant_str</i><br/>
-</code>
-
-<h3>Gene</h3>
-
-<code>
-/rest/gene/&lt;gene_id><br/>
-/rest/gene/transcript/&lt;gene_id><br/>
-/rest/gene/variants_in_gene/&lt;gene_id><br/>
-/rest/gene/variants_in_transcript/&lt;gene_id><br/>
-/rest/gene/transcripts_in_gene/&lt;gene_id><br/>
-/rest/gene/coverage_stats/&lt;gene_id><br/>
-</code>
-
-<h3>Transcript</h3>
-
-<code>
-/rest/transcript/&lt;transcript_id><br/>
-/rest/transcript/transcript/&lt;transcript_id><br/>
-/rest/transcript/variants_in_transcript/&lt;transcript_id><br/>
-/rest/transcript/coverage_stats/&lt;transcript_id><br/>
-/rest/transcript/gene/&lt;transcript_id><br/>
-
-</code>
-
-<h3>Region</h3>
-
-<code>
-/rest/region/&lt;region_id><br/>
-/rest/region/genes_in_region/&lt;region_id><br/>
-/rest/region/variants_in_region/&lt;region_id><br/>
-/rest/region/coverage_array/&lt;region_id><br/>
-
-</code>
-<h3>dbSNP</h3>
-<code>
-/rest/dbsnp/&lt;rsid><br/>
-</code>
-        </p>
+        <div class="col-sm-3 col-md-2 sidebar">
+		<ul class="nav nav-sidebar">
+            <li class="mainNavHeader"><a href="#Introduction">Introduction</a></li>
+        </ul>
+		<ul class="nav nav-sidebar">
+            <li class="mainNavHeader"><a href="#Search">Search</a></li>
+            <li><a href="#rest-awesome">/rest/awesome</a></li>
+        </ul>
+		<ul class="nav nav-sidebar">
+            <li class="mainNavHeader"><a href="#Variant">Variant</a></li>
+            <li><a href="#rest-variant">/rest/variant</a></li>
+            <li><a href="#rest-variant-variant">/rest/variant/variant</a></li>
+            <li><a href="#rest-variant-base_coverage">/rest/variant/base_coverage</a></li>
+            <li><a href="#rest-variant-consequences">/rest/variant/consequences</a></li>
+            <li><a href="#rest-variant-any_covered">/rest/variant/any_covered</a></li>
+            <li><a href="#rest-variant-ordered_csqs">/rest/variant/ordered_csqs</a></li>
+            <li><a href="#rest-variant-metrics">/rest/variant/metrics</a></li>
+        </ul>
+		<ul class="nav nav-sidebar">
+            <li class="mainNavHeader"><a href="#Gene">Gene</a></li>
+            <li><a href="#rest-gene">/rest/gene</a></li>
+            <li><a href="#rest-gene-transcript">/rest/gene/transcript</a></li>
+            <li><a href="#rest-gene-variants_in_gene">/rest/gene/variants_in_gene</a></li>
+            <li><a href="#rest-gene-variants_in_transcript">/rest/gene/variants_in_transcript</a></li>
+            <li><a href="#rest-gene-transcripts_in_gene">/rest/gene/transcripts_in_gene</a></li>
+            <li><a href="#rest-gene-coverage_stats">/rest/gene/coverage_stats</a></li>
+        </ul>
+		<ul class="nav nav-sidebar">
+            <li class="mainNavHeader"><a href="#Transcript">Transcript</a></li>
+            <li><a href="#rest-transcript">/rest/transcript</a></li>
+            <li><a href="#rest-transcript-transcript">/rest/transcript/transcript</a></li>
+            <li><a href="#rest-transcript-variants_in_transcript">/rest/transcript/variants_in_transcript</a></li>
+            <li><a href="#rest-transcript-coverage_stats">/rest/transcript/coverage_stats</a></li>
+            <li><a href="#rest-transcript-gene">/rest/transcript/gene</a></li>
+        </ul>
+		<ul class="nav nav-sidebar">
+            <li class="mainNavHeader"><a href="#Region">Region</a></li>
+            <li><a href="#rest-region">/rest/region</a></li>
+            <li><a href="#rest-region-genes_in_region">/rest/region/genes_in_region</a></li>
+            <li><a href="#rest-region-variants_in_region">/rest/region/variants_in_region</a></li>
+            <li><a href="#rest-region-coverage_array">/rest/region/coverage_array</a></li>
+        </ul>
+		<ul class="nav nav-sidebar">
+            <li class="mainNavHeader"><a href="#dbSNP">dbSNP</a></li>
+            <li><a href="#rest-dbsnp">/rest/dbsnp</a></li>
+        </ul>
+		<ul class="nav nav-sidebar">
+            <li class="mainNavHeader"><a href="#Bulk">Bulk Query</a></li>
+            <li><a href="#rest-bulk-variant">/rest/bulk/variant</a></li>
+            <li><a href="#rest-bulk-variant-variant">/rest/bulk/variant/variant</a></li>
+        </ul>
         </div>
+<!-- MAIN -->
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<!-- INTRODUCTION -->
+        	 <div class="row docRow" id="Introduction">
+            	<div class="col-xs-6 col-sm-6 docRowText">
+            		<span class="docRowHeader">Introduction</span>
+            		<p class="docText"> The Exome Aggregation Consortium (ExAC) Browser is a product created at the Broad Institue. It contains genomic information ono ver 60,000 individuals who were sequenced through a variety of projects. You can learn more about this project at the ExAC web site (<a target="_blank" href="http://exac.broadinstitute.org">exac.broadinstitute.org</a>).</span>
+            		<p class="docText"> As part of the BD2K PIC-SURE Center of Excellence the team extended the ExAC application by providing  a REST service. These services enable a user to integrate ExAC services into their own tools, querying the variant information and returning the data in an easy to use JSON format.</p>
 
-
-<div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-        <h2>Bulk Query</h2>
-        </div>
+            		<p class="introductionGitHub">You can see the changes we made on <a target="_blank" href="https://github.com/hms-dbmi/exac_browser">GitHub</a></p>
+            	</div>
+            </div>
+<!-- SEARCH -->
+			<div class="row docRow" id="Search">
+            	<div class="col-xs-6 col-sm-6 docRowText">
+            		<span class="docRowHeader">Search</span>
+            		<p class="docText">You can search for a gene, region, transcript, variant, or dbSNP by using the search API.</p>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-awesome">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/awesome</span>
+            		<p class="docText">This call returns information about a gene given its name. Further refinement can be accomplished by setting the service parameter so that only specific information is returned (e.g. Variants in that gene). This is accomplished through a redirect to the URL with the ExAC gene identifier. </p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+    	            			<tr>
+        	          				<td>query
+        	          				<span class="parameterScope">required</span
+        	          				</td>
+            	      				<td>The name of the gene</td>
+                				</tr>
+                				<tr>
+                  					<td>service
+                  						<span class="parameterScope">optional</span>
+                  					</td>
+                  					<td>The type of gene information you would like returned</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        				<p class="docTextNote"><b>NOTE:</b> This REST call will return a 301(Redirect) which will redirect the user to the correct page. Please make sure the you enable your application to follow redirects.</p>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/awesome?query=CHD8&service=variants_in_gene</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/awesome?query=CHD8&service=variants_in_gene', '#rest-awesome-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-awesome-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+<!-- VARIANT -->
+            <div class="row docRow" id="Variant">
+            	<div class="col-xs-12 col-sm-12 docRowText">
+            		<span class="docRowHeader">Variant</span>
+            		<p class="docText">Various levels of detail about a variant can be obtained by calling any of the variant REST calls with the Variant Id (<br/> <i>CHROMOSOME</i>-<i>POSITION</i>-<i>REFERENCE</i>-<i>VARIANT</i>).</p>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-variant">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/variant</span>
+            		<p class="docText">This call returns all information about a variant in the ExAC database.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+    	            			<tr>
+        	          				<td>Variant Id
+        	          					<span class="parameterScope">required</span>
+        	          				</td>
+            	      				<td>The Variant Id is a string that identifies the gene, position, reference amino acid, and the variant. In the following format:<br/> <i>CHROMOSOME</i>-<i>POSITION</i>-<i>REFERENCE</i>-<i>VARIANT</i></td>
+                				</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/variant/14-21853913-T-C</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/variant/14-21853913-T-C', '#rest-variant-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-variant-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+			<div class="row docRow" id="rest-variant-variant">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/variant/variant</span>
+            		<p class="docText">This call returns information about the variant itself including the gene that it is in, the frequency of it in the database, and what transcripts it could be found in.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+    	            			<tr>
+        	          				<td>Variant Id
+        	          					<span class="parameterScope">required</span>
+        	          				</td>
+            	      				<td>The Variant Id is a string that identifies the gene, position, reference amino acid, and the variant. In the following format:<br/> <i>CHROMOSOME</i>-<i>POSITION</i>-<i>REFERENCE</i>-<i>VARIANT</i></td>
+                				</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/variant/variant/14-21853913-T-C</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/variant/variant/14-21853913-T-C', '#rest-variant-variant-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-variant-variant-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+			<div class="row docRow" id="rest-variant-base_coverage">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/variant/base_coverage</span>
+            		<p class="docText">This call returns information about a variants base coverage.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+    	            			<tr>
+        	          				<td>Variant Id
+        	          					<span class="parameterScope">required</span>
+        	          				</td>
+            	      				<td>The Variant Id is a string that identifies the gene, position, reference amino acid, and the variant. In the following format:<br/> <i>CHROMOSOME</i>-<i>POSITION</i>-<i>REFERENCE</i>-<i>VARIANT</i></td>
+                				</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/variant/base_coverage/14-21853913-T-C</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/variant/base_coverage/14-21853913-T-C', '#rest-variant-base-coverage-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-variant-base-coverage-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+			<div class="row docRow" id="rest-variant-consequences">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/variant/consequences</span>
+            		<p class="docText">This call returns information about any genotypic consequences from this variantion.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+    	            			<tr>
+        	          				<td>Variant Id
+        	          					<span class="parameterScope">required</span>
+        	          				</td>
+            	      				<td>The Variant Id is a string that identifies the gene, position, reference amino acid, and the variant. In the following format:<br/> <i>CHROMOSOME</i>-<i>POSITION</i>-<i>REFERENCE</i>-<i>VARIANT</i></td>
+                				</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/variant/consequences/14-21853913-T-C</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/variant/consequences/14-21853913-T-C', '#rest-variant-consequences-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-variant-consequences-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+			<div class="row docRow" id="rest-variant-any_covered">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/variant/any_covered</span>
+            		<p class="docText">This call returns a boolean if this variant is found in any individuals.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+    	            			<tr>
+        	          				<td>Variant Id
+        	          					<span class="parameterScope">required</span>
+        	          				</td>
+            	      				<td>The Variant Id is a string that identifies the gene, position, reference amino acid, and the variant. In the following format:<br/> <i>CHROMOSOME</i>-<i>POSITION</i>-<i>REFERENCE</i>-<i>VARIANT</i></td>
+                				</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/variant/any_covered/14-21853913-T-C</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/variant/any_covered/14-21853913-T-C', '#rest-variant-any_covered-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-variant-any_covered-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+			<div class="row docRow" id="rest-variant-ordered_csqs">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/variant/ordered_csqs</span>
+            		<p class="docText">This call returns information about the CSQS of the variant.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+    	            			<tr>
+        	          				<td>Variant Id
+        	          					<span class="parameterScope">required</span>
+        	          				</td>
+            	      				<td>The Variant Id is a string that identifies the gene, position, reference amino acid, and the variant. In the following format:<br/> <i>CHROMOSOME</i>-<i>POSITION</i>-<i>REFERENCE</i>-<i>VARIANT</i></td>
+                				</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/variant/ordered_csqs/14-21853913-T-C</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/variant/ordered_csqs/14-21853913-T-C', '#rest-variant-ordered_csqs-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-variant-ordered_csqs-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+			<div class="row docRow" id="rest-variant-metrics">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/variant/metrics</span>
+            		<p class="docText">This call will return various metric information about the variant.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+    	            			<tr>
+        	          				<td>Variant Id
+        	          					<span class="parameterScope">required</span>
+        	          				</td>
+            	      				<td>The Variant Id is a string that identifies the gene, position, reference amino acid, and the variant. In the following format:<br/> <i>CHROMOSOME</i>-<i>POSITION</i>-<i>REFERENCE</i>-<i>VARIANT</i></td>
+                				</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/variant/metrics/14-21853913-T-C</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/variant/metrics/14-21853913-T-C', '#rest-variant-metrics-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-variant-metrics-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+<!-- GENE -->
+			<div class="row docRow" id="Gene">
+            	<div class="col-xs-12 col-sm-12 docRowText">
+            		<span class="docRowHeader">Gene</span>
+            		<p class="docText">Various levels of detail on variants in the ExAC database can be found by the Ensembl gene id. If the Ensembl id is not known then the search tool can be used.</p>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-gene">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/gene</span>
+            		<p class="docText">This call returns all the variant information in the ExAC database from the gene level.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Gene Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl gene Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/gene/ENSG00000169174</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/gene/ENSG00000169174', '#rest-gene-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-gene-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-gene-transcript">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/gene/transcript</span>
+            		<p class="docText">This call returns all the transcripts in a gene.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Gene Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl gene Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/gene/transcript/ENSG00000169174</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/gene/transcript/ENSG00000169174', '#rest-gene-transcript-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-gene-transcript-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-gene-variants_in_gene">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/gene/variants_in_gene</span>
+            		<p class="docText">This call returns all the variant information in a gene.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Gene Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl gene Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/gene/variants_in_gene/ENSG00000169174</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/gene/variants_in_gene/ENSG00000169174', '#rest-gene-variants_in_gene-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-gene-variants_in_gene-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-gene-variants_in_transcript">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/gene/variants_in_transcript</span>
+            		<p class="docText">This call returns all the variant information in a gene plus what transcript(s) the variant is in.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Gene Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl gene Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/gene/variants_in_transcript/ENSG00000169174</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/gene/variants_in_transcript/ENSG00000169174', '#rest-gene-variants_in_transcript-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-gene-variants_in_transcript-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-gene-transcripts_in_gene">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/gene/transcripts_in_gene</span>
+            		<p class="docText">This call returns all the transcripts in a gene.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Gene Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl gene Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/gene/transcripts_in_gene/ENSG00000169174</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/gene/transcripts_in_gene/ENSG00000169174', '#rest-gene-transcripts_in_gene-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-gene-transcripts_in_gene-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-gene-coverage_stats">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/gene/coverage_stats</span>
+            		<p class="docText">This call returns all the coverage statistics for every varaint in a gene.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Gene Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl gene Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/gene/coverage_stats/ENSG00000169174</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/gene/coverage_stats/ENSG00000169174', '#rest-gene-coverage_stats-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-gene-coverage_stats-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+<!-- TRANSCRIPT -->
+			<div class="row docRow" id="Transcript">
+            	<div class="col-xs-12 col-sm-12 docRowText">
+            		<span class="docRowHeader">Transcript</span>
+            		<p class="docText">Various levels of detail on variants in the ExAC database can be found by the Ensembl variant id.</p>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-transcript">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/transcript</span>
+            		<p class="docText">This call returns all the variant information in the ExAC database from the variant level.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Transcript Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl transcript Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/transcript/ENST00000407236</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/transcript/ENST00000407236', '#rest-transcript-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-transcript-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-transcript-transcript">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/transcript/transcript</span>
+            		<p class="docText">This call returns infromation about the transcript such as its exons, start, stop, and strand.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Transcript Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl transcript Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/transcript/transcript/ENST00000407236</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/transcript/transcript/ENST00000407236', '#rest-transcript-transcript-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-transcript-transcript-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-transcript-variants_in_transcript">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/transcript/variants_in_transcript</span>
+            		<p class="docText">This call returns all the variants in a transcript.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Transcript Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl transcript Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/transcript/variants_in_transcript/ENST00000407236</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/transcript/variants_in_transcript/ENST00000407236', '#rest-transcript-variants_in_transcript-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-transcript-variants_in_transcript-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-transcript-coverage_stats">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/transcript/coverage_stats</span>
+            		<p class="docText">This call returns all the coverage statistical information in a transcript.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Transcript Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl transcript Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/transcript/coverage_stats/ENST00000407236</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/transcript/coverage_stats/ENST00000407236', '#rest-transcript-coverage_stats-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-transcript-coverage_stats-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-transcript-gene">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/transcript/gene</span>
+            		<p class="docText">This call returns the gene information that this transcript is part of.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Transcript Id
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Ensembl transcript Id</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/transcript/gene/ENST00000407236</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/transcript/gene/ENST00000407236', '#rest-transcript-gene-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-transcript-gene-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+<!-- REGION -->
+			<div class="row docRow" id="Region">
+            	<div class="col-xs-12 col-sm-12 docRowText">
+            		<span class="docRowHeader">Region</span>
+            		<p class="docText">Various levels of detail on variants, gene, and transcipts in the ExAC database that can be found in that region.</p>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-region">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/region</span>
+            		<p class="docText">This call returns all the variant, gene, and transcript information in this region.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Region
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Region is a string that identifies the chromosome, start and stop position you want to look in. In the following format:<br/> <i>CHROMOSOME</i>-<i>START</i>-<i>STOP</i></td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/region/22-46615715-46615880</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/region/22-46615715-46615880', '#rest-region-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-region-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-region-genes_in_region">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/region/genes_in_region</span>
+            		<p class="docText">This call returns all the genes that are in this region.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Region
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Region is a string that identifies the chromosome, start and stop position you want to look in. In the following format:<br/> <i>CHROMOSOME</i>-<i>START</i>-<i>STOP</i></td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/region/genes_in_region/22-46615715-46615880</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/region/genes_in_region/22-46615715-46615880', '#rest-region-genes_in_region-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-region-genes_in_region-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-region-variants_in_region">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/region/variants_in_region</span>
+            		<p class="docText">This call returns all variants in the region.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Region
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Region is a string that identifies the chromosome, start and stop position you want to look in. In the following format:<br/> <i>CHROMOSOME</i>-<i>START</i>-<i>STOP</i></td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/region/variants_in_region/22-46615715-46615880</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/region/variants_in_region/22-46615715-46615880', '#rest-region-variants_in_region-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-region-variants_in_region-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-region-coverage_array">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/region/coverage_array</span>
+            		<p class="docText">This call returns all the coverage information in this region.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>Region
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The Region is a string that identifies the chromosome, start and stop position you want to look in. In the following format:<br/> <i>CHROMOSOME</i>-<i>START</i>-<i>STOP</i></td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/region/coverage_array/22-46615715-46615880</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/region/coverage_array/22-46615715-46615880', '#rest-region-coverage_array-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-region-coverage_array-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+<!-- DBSNP -->
+			<div class="row docRow" id="dbSNP">
+            	<div class="col-xs-12 col-sm-12 docRowText">
+            		<span class="docRowHeader">dbSNP</span>
+            		<p class="docText">All variant information in the ExAC database at the position associated with dbSNP.</p>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-dbsnp">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/dbsnp</span>
+            		<p class="docText">Returns all the variant information at the dbSNP position.</p>
+            		<div class="table-responsive">
+	            		<table class="table table-striped">
+    	          			<thead>
+        	        			<tr>
+            	      				<th>Parameter</th>
+                	  				<th>Description</th>
+                				</tr>
+              				</thead>
+	              			<tbody>
+                				<tr>
+                  					<td>dbSNP
+                  						<span class="parameterScope">required</span>
+                  					</td>
+                  					<td>The dbSNP identifier</td>
+	                			</tr>
+    	        			</tbody>
+        				</table>
+        			</div>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<span class="tryMeURL">/rest/dbsnp/rs1800234</span>
+            				<button class="tryMeButton" onclick="runGetRequest('/rest/dbsnp/rs1800234', '#rest-dbsnp-response')">Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-dbsnp-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+<!-- BULK -->
+			<div class="row docRow" id="Bulk">
+            	<div class="col-xs-6 col-sm-6 docRowText">
+            		<span class="docRowHeader">Bulk Query</span>
+            		<p class="docText">All bulk queries require a POST call with a request body that contains an JSON array of variant strings(CHROMOSOME-POSITION-REFERENCE-VARIANT)</p>
+            	</div>
+            </div> 
+            <div class="row docRow" id="rest-bulk-variant">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/bulk/variant</span>
+            		<p class="docText">This call returns an array of information about the variants found in the ExAC database.</p>
+            		<p class="docText"><b>Body</b><br/>A JSON array of variant strings(CHROMOSOME-POSITION-REFERENCE-VARIANT).</p>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-3 col-sm-3">
+            				<span class="tryMeURL">/rest/bulk/variant<br/>[<br/>"14-21853913-T-C",<br/>"14-21854139-A-G",<br/>"22-46615746-A-G"<br/>]</span>
+            			</div>
+            			<div class="col-xs-9 col-sm-9">
+            				<button class="tryMeButton" onclick='runPostRequest("/rest/bulk/variant", "[\"14-21853913-T-C\", \"14-21854139-A-G\",\"22-46615746-A-G\"]", "#rest-bulk-variant-response")'>Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				
+            				<pre class="tryMeResponseArea" id="rest-bulk-variant-response">
+								<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
+            <div class="row docRow" id="rest-bulk-variant-variant">
+            	<div class="col-xs-4 col-sm-4 docRowText">
+            		<span class="docRowHeader">/rest/bulk/variant/variant</span>
+            		<p class="docText">This call returns an array of information about the variants passed to it including the gene(s) that they are in, the frequency of it in the database, and what transcripts it could be found in.</p>
+            		<p class="docText"><b>Body</b><br/>A JSON array of variant strings(CHROMOSOME-POSITION-REFERENCE-VARIANT).</p>
+            	</div>
+            	<div class="col-xs-8 col-sm-8 docRowCode">
+            		<div class="row tryMeRow">
+            			<div class="col-xs-3 col-sm-3">
+            				<span class="tryMeURL">/rest/bulk/variant/variant<br/>[<br/>"14-21853913-T-C",<br/>"14-21854139-A-G",<br/>"22-46615746-A-G"<br/>]</span>
+            			</div>
+            			<div class="col-xs-9 col-sm-9">
+            				<button class="tryMeButton" onclick='runPostRequest("/rest/bulk/variant/variant", "[\"14-21853913-T-C\", \"14-21854139-A-G\",\"22-46615746-A-G\"]", "#rest-bulk-variant-variant-response")'>Try Me</button>
+            			</div>
+            		</div>
+            		<div class="row tryMeResultRow">
+            			<div class="col-xs-12 col-sm-12">
+            				<pre class="tryMeResponseArea" id="rest-bulk-variant-variant-response">
+            					<span class="glyphicon glyphicon-repeat normal-right-spinner" style=" display: none"></span>
+            				</pre>
+            			</div>
+            		</div>
+            	</div>
+            </div>
       </div>
-      <div class="row">
-        <div class="col-lg-12">
-<p>All bulk queries require a POST call with a request body that contains an JSON array of variant strings(CHROMOSOME-POSITION-REFERENCE-VARIANT)</p>
-<code>
-/rest/bulk/variant<br/>
-/rest/bulk/variant/variant <br/>
-</code>
-
-      </div>
-</div>
-    <!-- FOOTER -->
-		<footer>
-			<p class="pull-right">
-				<a href="#">Back to top</a>
-			</p>
-		</footer>
-
-	</div>
-	<!-- /.container -->
+  </div>
 
 
-	<!-- Bootstrap core JavaScript
-    ================================================== -->
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="./lib/jQuery/jquery-2.1.4.min.js"></script>
-	<script src="./lib/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="./bower_components/jquery/dist/jquery.min.js"></script>
+<script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="./lib/json-viewer/jquery.json-viewer.js"></script>
+<script src="./js/main.js"></script>
 </body>
 </html>
