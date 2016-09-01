@@ -67,7 +67,7 @@ function runGetRequest(url, responseArea) {
         })
         .fail(function() {
             $(responseArea).empty();
-            $(responseArea).text('I am awesome');
+            $(responseArea).text('There was an error in communicating with the server. Please try again later.');
     });
 }
 
@@ -81,6 +81,6 @@ function runPostRequest(url, payload, responseArea) {
         })
         .fail(function() {
             $(responseArea).empty();
-            $(responseArea).text('I am awesome');
+            $(responseArea).text('There was an error in communicating with the server. Please try again later.');
     });
 }
